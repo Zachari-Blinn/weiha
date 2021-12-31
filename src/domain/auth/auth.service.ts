@@ -1,10 +1,14 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { sign } from 'jsonwebtoken';
+import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async validateOAuthLogin(req): Promise<string> {
     try {
@@ -24,14 +28,12 @@ export class AuthService {
         });
       }
 
-      const payload = {
+      const payload: JwtPayload = {
         providerId: req.user.providerId,
         provider: req.user.provider,
       };
 
-      const jwt: string = sign(payload, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
-      });
+      const jwt: string = this.jwtService.sign(payload);
 
       return jwt;
     } catch (error) {
