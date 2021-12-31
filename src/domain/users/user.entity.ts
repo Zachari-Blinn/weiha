@@ -41,8 +41,11 @@ export class User {
   @Column()
   public lastName: string;
 
-  @Column()
+  @Column({ unique: true })
   public email: string;
+
+  @Column()
+  public stripeCustomerId: string;
 }
 
 export default User;
