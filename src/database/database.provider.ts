@@ -13,6 +13,6 @@ export const databaseProviders = [
         database: 'test',
         entities: [__dirname + '/../domain/**/*.entity{.ts,.js}'],
         synchronize: true,
-      }).catch((error) => console.log(error)),
+      }).catch(error => console.log(error)),
   },
 ];
