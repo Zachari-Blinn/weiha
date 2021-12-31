@@ -18,4 +18,19 @@ export default class StripeService {
       email,
     });
   }
+
+  public charge(
+    amount: number,
+    paymentMethod: string,
+    customerId: string,
+    currency?: string,
+  ): Promise<any> {
+    return this.stripe.paymentIntents.create({
+      amount,
+      customer: customerId,
+      payment_method: paymentMethod,
+      currency: currency || this.configService.get<string>('STRIPE_CURRENCY'),
+      confirm: true,
+    });
+  }
 }

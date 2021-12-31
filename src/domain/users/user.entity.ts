@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Provider } from '../auth/constants/provider.enum';
 
 @Entity()
 export class User {
@@ -22,16 +23,6 @@ export class User {
   @DeleteDateColumn()
   public deletedAt: Date;
 
-  @Column({ nullable: true })
-  @Exclude()
-  public password?: string;
-
-  @Column({ nullable: true })
-  public provider?: string;
-
-  @Column({ nullable: true })
-  public providerId?: string;
-
   @Column()
   public username: string;
 
@@ -44,8 +35,18 @@ export class User {
   @Column({ unique: true })
   public email: string;
 
-  @Column()
-  public stripeCustomerId: string;
+  @Column({ nullable: true })
+  @Exclude()
+  public password?: string;
+
+  @Column({ nullable: true, enum: Provider })
+  public provider?: string;
+
+  @Column({ nullable: true })
+  public providerId?: string;
+
+  @Column({ nullable: true })
+  public stripeCustomerId?: string;
 }
 
 export default User;
