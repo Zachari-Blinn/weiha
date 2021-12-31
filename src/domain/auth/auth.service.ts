@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import User from '../users/user.entity';
 import { UsersService } from '../users/users.service';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 
@@ -12,7 +13,7 @@ export class AuthService {
 
   async validateOAuthLogin(req): Promise<string> {
     try {
-      let user = await this.usersService.findOneByThirdPartyId(
+      let user: User = await this.usersService.findOneByThirdPartyId(
         req.user.providerId,
         req.user.provider,
       );
