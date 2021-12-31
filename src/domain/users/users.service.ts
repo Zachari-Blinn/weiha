@@ -31,7 +31,7 @@ export class UsersService {
     return `This action removes a #${id} user`;
   }
 
-  public findOneByThirdPartyId(thirdPartyId: string, provider: Provider): Promise<any> {
+  public findOneByThirdPartyId(thirdPartyId: string, provider: Provider): Promise<User> {
     return this.userRepository.findOne({
       where: {
         providerId: thirdPartyId,
@@ -40,7 +40,7 @@ export class UsersService {
     });
   }
 
-  public registerOAuthUser(registerOAuthUserDto: RegisterOAuthUserDto): Promise<any> {
+  public registerOAuthUser(registerOAuthUserDto: RegisterOAuthUserDto): Promise<User> {
     return this.userRepository.save(registerOAuthUserDto);
   }
 }

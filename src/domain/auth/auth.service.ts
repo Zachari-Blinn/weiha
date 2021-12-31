@@ -1,22 +1,10 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { sign } from 'jsonwebtoken';
 import { UsersService } from '../users/users.service';
-import { Provider } from './constants/provider.enum';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
-
-  googleLogin(req) {
-    if (!req.user) {
-      return 'No user found from google';
-    }
-
-    return {
-      message: 'User information from google',
-      user: req.user,
-    };
-  }
 
   async validateOAuthLogin(req): Promise<string> {
     try {
