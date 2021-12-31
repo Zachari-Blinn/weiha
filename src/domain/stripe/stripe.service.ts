@@ -6,8 +6,8 @@ import Stripe from 'stripe';
 export default class StripeService {
   private stripe: Stripe;
 
-  constructor(private configService: ConfigService) {
-    this.stripe = new Stripe(configService.get<string>('STRIPE_SECRET_KEY'), {
+  constructor(private readonly configService: ConfigService) {
+    this.stripe = new Stripe(this.configService.get<string>('STRIPE_SECRET_KEY'), {
       apiVersion: '2020-08-27',
     });
   }
