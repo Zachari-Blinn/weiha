@@ -4,10 +4,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Provider } from '../auth/constants/provider.enum';
+import { Order } from '../orders/entities/order.entity';
 
 @Entity()
 export class User {
@@ -47,6 +49,9 @@ export class User {
 
   @Column({ nullable: true })
   public stripeCustomerId?: string;
+
+  @OneToMany(() => Order, order => order.user)
+  public orders: Order[];
 }
 
 export default User;

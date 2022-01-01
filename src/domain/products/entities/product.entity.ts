@@ -3,9 +3,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { OrderDetail } from '../../order-details/entities/order-detail.entity';
 
 @Entity()
 export class Product {
@@ -29,4 +31,7 @@ export class Product {
 
   @Column({ nullable: false, type: 'money', default: 0 })
   public price!: number;
+
+  @OneToMany(() => OrderDetail, orderDetail => orderDetail.product)
+  public orderDetails!: OrderDetail[];
 }
