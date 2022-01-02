@@ -1,4 +1,4 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Provider } from '../auth/constants/provider.enum';
@@ -25,6 +25,13 @@ export class UsersService {
   }
 
   public async registerOAuthUser(userData: RegisterOAuthUserDto): Promise<User> {
+    //check if user already exists
+    const user = await this.findOneByCriteria({
+      email: userData.email,
+    });
+    if (user) {
+      throw new ConflictException('User already exists');
+    }
     const stripeCustomer = await this.stripeService.createCustomer(
       userData.username,
       userData.email,
@@ -36,6 +43,13 @@ export class UsersService {
   }
 
   public async registerLocalUser(userData: CreateUserDto): Promise<User> {
+    //check if user already exists
+    const user = await this.findOneByCriteria({
+      email: userData.email,
+    });
+    if (user) {
+      throw new ConflictException('User already exists');
+    }
     const stripeCustomer = await this.stripeService.createCustomer(
       userData.username,
       userData.email,
