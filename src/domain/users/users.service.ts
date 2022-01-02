@@ -29,10 +29,32 @@ export class UsersService {
       userData.username,
       userData.email,
     );
-    const newUser = await this.userRepository.save({
+    return this.userRepository.save({
       ...userData,
       stripeCustomerId: stripeCustomer.id,
     });
-    return this.userRepository.save(newUser);
+  }
+
+  public async registerLocalUser(userData: CreateUserDto): Promise<User> {
+    const stripeCustomer = await this.stripeService.createCustomer(
+      userData.username,
+      userData.email,
+    );
+    return this.userRepository.save({
+      ...userData,
+      stripeCustomerId: stripeCustomer.id,
+    });
+  }
+
+  public async findOne(id: string): Promise<User> {
+    return this.userRepository.findOne(id);
+  }
+
+  public async findByCriteria(criteria: Partial<User>): Promise<User[]> {
+    return this.userRepository.find(criteria);
+  }
+
+  public async findOneByCriteria(criteria: Partial<User>): Promise<User> {
+    return this.userRepository.findOne(criteria);
   }
 }

@@ -3,6 +3,9 @@ import { JwtService } from '@nestjs/jwt';
 import User from '../users/user.entity';
 import { UsersService } from '../users/users.service';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
+import * as bcrypt from 'bcrypt';
+import { Provider } from './constants/provider.enum';
+
 
 @Injectable()
 export class AuthService {
@@ -11,7 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateOAuthLogin(req): Promise<string> {
+  public async validateOAuthLogin(req): Promise<string> {
     try {
       let user: User = await this.usersService.findOneByThirdPartyId(
         req.user.providerId,
@@ -30,6 +33,7 @@ export class AuthService {
       }
 
       const payload: JwtPayload = {
+        userId: user.id,
         providerId: req.user.providerId,
         provider: req.user.provider,
       };
@@ -40,5 +44,31 @@ export class AuthService {
     } catch (error) {
       throw new InternalServerErrorException('validateOAuthLogin', error.message);
     }
+  }
+
+  public async validateLocalUser(username: string, providedPassword: string): Promise<User> {
+    try {
+      const user: User = await this.usersService.findOneByCriteria({
+        username,
+      });
+      if (user && (await bcrypt.compare(providedPassword, user.password))) {
+        const { password, ...result } = user;
+        return result;
+      }
+      return null;
+    } catch (error) {
+      throw new InternalServerErrorException('validateLocalUser', error.message);
+    }
+  }
+
+  public async login(user: User): Promise<any> {
+    const payload: JwtPayload = {
+      userId: user.id,
+      providerId: null,
+      provider: Provider.LOCAL,
+    };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }

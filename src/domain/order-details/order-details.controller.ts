@@ -7,9 +7,10 @@ import { UpdateOrderDetailDto } from './dto/update-order-detail.dto';
 export class OrderDetailsController {
   constructor(private readonly orderDetailsService: OrderDetailsService) {}
 
-  @Post('orders/:orderId/products/:productId')
-  addProductToOrder(@Param('orderId') orderId: string, @Param('productId') productId: string) {
-    return this.orderDetailsService.addProductToOrder(orderId, productId);
+  @Post('users/:userId/products/:productId')
+  addProductToUserCart(@Param('userId') userId: string, @Param('productId') productId: string) {
+    console.log(userId, productId);
+    return this.orderDetailsService.addProductToUserCart(userId, productId);
   }
 
   @Delete('orders/:orderId/products/:productId')

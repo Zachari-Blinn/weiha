@@ -1,4 +1,7 @@
+import { Provider } from "../constants/provider.enum";
+
 export interface JwtPayload {
-  providerId: string;
-  provider: string;
+  userId: string;
+  providerId?: string;
+  provider: Provider;
 }
