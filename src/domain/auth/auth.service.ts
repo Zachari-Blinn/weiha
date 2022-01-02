@@ -52,7 +52,6 @@ export class AuthService {
         username,
       });
       if (user && user.password && (await bcrypt.compare(providedPassword, user.password))) {
-        console.log('user found');
         const { password, ...result } = user;
         return result;
       }

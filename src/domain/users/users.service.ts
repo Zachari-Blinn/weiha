@@ -62,10 +62,9 @@ export class UsersService {
       password: hashedPassword,
     });
     // remove password field from createdUser
-    return createdUser = {
-      ...createdUser,
-      password: undefined,
-    };
+    const { password, ...result } = createdUser;
+
+    return result;
   }
 
   public async hashPassword(password: string): Promise<string> {
