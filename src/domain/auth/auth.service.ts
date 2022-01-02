@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import User from '../users/user.entity';
 import { UsersService } from '../users/users.service';
@@ -48,10 +48,15 @@ export class AuthService {
 
   public async validateLocalUser(username: string, providedPassword: string): Promise<User> {
     try {
+      //check if username and password are provided
+      if (!username || !providedPassword) {
+        throw new BadRequestException('Username and password are required');
+      }
       const user: User = await this.usersService.findOneByCriteria({
         username,
       });
-      if (user && (await bcrypt.compare(providedPassword, user.password))) {
+      if (user && user.password && (await bcrypt.compare(providedPassword, user.password))) {
+        console.log('user found');
         const { password, ...result } = user;
         return result;
       }
