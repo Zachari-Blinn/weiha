@@ -41,7 +41,7 @@ export class User {
   @Exclude()
   public password?: string;
 
-  @Column({ nullable: true, enum: Provider })
+  @Column({ nullable: true, enum: Provider, default: Provider.LOCAL })
   public provider?: string;
 
   @Column({ nullable: true })

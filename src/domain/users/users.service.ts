@@ -7,6 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { RegisterOAuthUserDto } from './dto/register-oauth-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import User from './user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -50,14 +51,26 @@ export class UsersService {
     if (user) {
       throw new ConflictException('User already exists');
     }
+    const hashedPassword = await this.hashPassword(userData.password);
     const stripeCustomer = await this.stripeService.createCustomer(
       userData.username,
       userData.email,
     );
-    return this.userRepository.save({
+    let createdUser = await this.userRepository.save({
       ...userData,
       stripeCustomerId: stripeCustomer.id,
+      password: hashedPassword,
     });
+    // remove password field from createdUser
+    return createdUser = {
+      ...createdUser,
+      password: undefined,
+    };
+  }
+
+  public async hashPassword(password: string): Promise<string> {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    return hashedPassword;
   }
 
   public async findOne(id: string): Promise<User> {
