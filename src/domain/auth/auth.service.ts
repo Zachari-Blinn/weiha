@@ -48,10 +48,6 @@ export class AuthService {
 
   public async validateLocalUser(username: string, providedPassword: string): Promise<User> {
     try {
-      //check if username and password are provided
-      if (!username || !providedPassword) {
-        throw new BadRequestException('Username and password are required');
-      }
       const user: User = await this.usersService.findOneByCriteria({
         username,
       });
